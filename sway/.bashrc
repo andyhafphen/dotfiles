@@ -6,12 +6,14 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # User specific environment
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+# Ensure local bin directories are in the PATH
+if ! [[ "$PATH" =~ (^|:)"$HOME/.local/bin"(:|$) ]] && ! [[ "$PATH" =~ (^|:)"$HOME/bin"(:|$) ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
 
 # User specific aliases and functions
+# Load additional bash configuration files from ~/.bashrc.d
 if [ -d ~/.bashrc.d ]; then
     for rc in ~/.bashrc.d/*; do
         if [ -f "$rc" ]; then
@@ -21,6 +23,7 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 
+# Aliases
 alias ls='ls -a --color=auto'
 alias reload='source ~/.bashrc'
 alias snano='sudo nano'
